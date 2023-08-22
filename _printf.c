@@ -10,7 +10,7 @@ int _printf(const char *format, ...)
 
 	if (format)
 	{
-		if (format[0] == ('\"') || (format[0] == ('\''))
+		if (format[0] == ('\"')) || (format[0] == ('\''))
 			{
 				while (format[i] != '%')
 				{
