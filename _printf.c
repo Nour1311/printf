@@ -3,22 +3,38 @@
 #include <stdarg.h>
 
 /**
+<<<<<<< HEAD
  * _print_char - Prints a character to stdout.
  * @c: The character to print.
  * @cpt: Pointer to the character count.
  */
 void _print_char(char c, int *cpt)
+=======
+ * print_char - Prints a character to stdout.
+ * @c: The character to print.
+ * @cpt: Pointer to the character count.
+ */
+void print_char(char c, int *cpt)
+>>>>>>> cc6eea0220bb41a993978734287dc72a9701e3e2
 {
 	write(1, &c, 1);
 	*cpt += 1;
 }
 
 /**
+<<<<<<< HEAD
  * _print_string - Prints a string to stdout.
  * @s: The string to print.
  * @cpt: Pointer to the character count.
  */
 void _print_string(char *s, int *cpt)
+=======
+ * print_string - Prints a string to stdout.
+ * @s: The string to print.
+ * @cpt: Pointer to the character count.
+ */
+void print_string(char *s, int *cpt)
+>>>>>>> cc6eea0220bb41a993978734287dc72a9701e3e2
 {
 	while (*s != '\0')
 	{
@@ -52,6 +68,7 @@ int _printf(const char *format, ...)
 			switch (format[i + 1])
 			{
 				case 'c':
+<<<<<<< HEAD
 					_print_char(va_arg(list, int), &cpt);
 					break;
 
@@ -66,12 +83,28 @@ int _printf(const char *format, ...)
 				default:
 					write(1, &format[i], 1);
 					cpt++;
+=======
+					print_char(va_arg(list, int), &cpt);
+					break;
+
+				case 's':
+					print_string(va_arg(list, char *), &cpt);
+					break;
+
+				case '%':
+					print_char('%', &cpt);
+					break;
+>>>>>>> cc6eea0220bb41a993978734287dc72a9701e3e2
 			}
 			i += 2;
 		}
 		else
 		{
+<<<<<<< HEAD
 			_print_char(format[i], &cpt);
+=======
+			print_char(format[i], &cpt);
+>>>>>>> cc6eea0220bb41a993978734287dc72a9701e3e2
 			i++;
 		}
 	}
