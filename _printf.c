@@ -3,67 +3,63 @@
 #include <stdarg.h>
 
 /**
- * _printf - produces output according to a format
- * @format: the variable string that will be printed.
- * Return: number of characters printed.
+ * _printf - Produces output according to a format.
+ * @format: The variable string that will be printed.
+ *
+ * Return: Number of characters printed.
  */
- 
 int _printf(const char *format, ...)
 {
-        int i = 1;
-        va_list list;
-        int cpt = 0;
-        
-        if (format == NULL)
-        	return (-1);
-        	
-        va_start (list, format);
+	int i = 0;
+	va_list list;
+	int cpt = 0;
 
-        while (format)
-        {
-                if ((format[0] == ('\"')) || (format[0] == ('\'')))
-                        {
-                                while (format[i] != "\0")
-                                {
-                                        if (format[i] == "%")
-                                        {
-                                                if (format[i + 1] == "c")
-                                                {
-                                                        char c = va_arg(list, char);
-                                                        write(1, &c, 1);
-                                                        cpt++;
-                                                }
+	if (format == NULL)
+		return (-1);
 
-                                                if (format[i + 1] == "s")
-                                                {
-                                                        char *s = va_arg(list, (char *));
-                                                        while (*s)
-                                                        {
-                                                                write(1, &s, 1);
-                                                                cpt++;
-                                                                s++;
-                                                        } 
-                                                }
+	va_start(list, format);
 
-                                                if (format[i + 1] == "%")
-                                                {
-                                                        write(1, "%", 1);
-                                                        cpt++;                                          
-                                                }
+	while (format[i] != '\0')
+	{
+		if (format[i] == '%' && format[i + 1] != '\0')
+		{
+			switch (format[i + 1])
+			{
+				case 'c':
+				{
+					char c = va_arg(list, int);
+					write(1, &c, 1);
+					cpt++;
+					break;
+				}
 
-                                                i++;
+				case 's':
+				{
+					char *s = va_arg(list, char *);
+					while (*s != '\0')
+					{
+						write(1, s, 1);
+						cpt++;
+						s++;
+					}
+					break;
+				}
 
-                                        }
-                                        else
-                                        {
-                                                write(1, format[i], 1);
-                                                cpt++;
-                                	        i++;
-                                        }
-                                        
-                                }
-                        }
-        }
-        va_end(list);
-        return (cpt);
+				case '%':
+					write(1, "%", 1);
+					cpt++;
+					break;
+			}
+			i += 2;
+		}
+		else
+		{
+			write(1, &format[i], 1);
+			cpt++;
+			i++;
+		}
+	}
+
+	va_end(list);
+	return (cpt);
 }
