@@ -10,12 +10,13 @@
  
 int _printf(const char *format, ...)
 {
-	int i = 1;
-	va_list list;
-
-	if (format == NULL)
-		return (-1);
-
+        int i = 1;
+        va_list list;
+        int cpt = 0;
+        
+        if (format == NULL)
+        	return (-1);
+        	
         va_start (list, format);
 
         while (format)
@@ -30,6 +31,7 @@ int _printf(const char *format, ...)
                                                 {
                                                         char c = va_arg(list, char);
                                                         write(1, &c, 1);
+                                                        cpt++;
                                                 }
 
                                                 if (format[i + 1] == "s")
@@ -38,6 +40,7 @@ int _printf(const char *format, ...)
                                                         while (*s)
                                                         {
                                                                 write(1, &s, 1);
+                                                                cpt++;
                                                                 s++;
                                                         } 
                                                 }
@@ -45,7 +48,7 @@ int _printf(const char *format, ...)
                                                 if (format[i + 1] == "%")
                                                 {
                                                         write(1, "%", 1);
-                                                                                                        
+                                                        cpt++;                                          
                                                 }
 
                                                 i++;
@@ -54,10 +57,13 @@ int _printf(const char *format, ...)
                                         else
                                         {
                                                 write(1, format[i], 1);
-                                	       i++;
-                                        }               
-			}
-		}
-	}
-	va_end(list);
+                                                cpt++;
+                                	        i++;
+                                        }
+                                        
+                                }
+                        }
+        }
+        va_end(list);
+        return (cpt);
 }
