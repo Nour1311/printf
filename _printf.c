@@ -3,22 +3,22 @@
 #include <stdarg.h>
 
 /**
- * print_char - Prints a character to stdout.
+ * _print_char - Prints a character to stdout.
  * @c: The character to print.
  * @cpt: Pointer to the character count.
  */
-void print_char(char c, int *cpt)
+void _print_char(char c, int *cpt)
 {
 	write(1, &c, 1);
 	*cpt += 1;
 }
 
 /**
- * print_string - Prints a string to stdout.
+ * _print_string - Prints a string to stdout.
  * @s: The string to print.
  * @cpt: Pointer to the character count.
  */
-void print_string(char *s, int *cpt)
+void _print_string(char *s, int *cpt)
 {
 	while (*s != '\0')
 	{
@@ -52,22 +52,26 @@ int _printf(const char *format, ...)
 			switch (format[i + 1])
 			{
 				case 'c':
-					print_char(va_arg(list, int), &cpt);
+					_print_char(va_arg(list, int), &cpt);
 					break;
 
 				case 's':
-					print_string(va_arg(list, char *), &cpt);
+					_print_string(va_arg(list, char *), &cpt);
 					break;
 
 				case '%':
-					print_char('%', &cpt);
+					_print_char('%', &cpt);
 					break;
+
+				default:
+					write(1, &format[i], 1);
+					cpt++;
 			}
 			i += 2;
 		}
 		else
 		{
-			print_char(format[i], &cpt);
+			_print_char(format[i], &cpt);
 			i++;
 		}
 	}
