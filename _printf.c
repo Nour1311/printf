@@ -1,82 +1,51 @@
 #include "main.h"
-#include <unistd.h>
-#include <stdarg.h>
 
 /**
- * _print_char - Prints a character to stdout.
- * @c: The character to print.
- * @printed_chars: Pointer to the character count.
- */
-void _print_char(char c, int *printed_chars)
-{
-    write(1, &c, 1);
-    (*printed_chars)++;
-}
-
-/**
- * _print_string - Prints a string to stdout.
- * @s: The string to print.
- * @printed_chars: Pointer to the character count.
+ * _printf - formatted output conversion and print data.
+ * @format: input string.
  *
- * Return: Number of characters printed.
- */
-void _print_string(char *s, int *printed_chars)
-{
-    while (*s)
-    {
-        write(1, s, 1);
-        (*printed_chars)++;
-        s++;
-    }
-}
-
-/**
- * _printf - Produces output according to a format.
- * @format: The variable string that will be printed.
- *
- * Return: Number of characters printed.
+ * Return: number of chars printed.
  */
 int _printf(const char *format, ...)
 {
-    va_list args;
-    int printed_chars = 0;
+	unsigned int i = 0, len = 0, ibuf = 0;
+	va_list arguments;
+	int (*function)(va_list, char *, unsigned int);
+	char *buffer;
 
-    va_start(args, format);
-
-    while (*format)
-    {
-        if (*format == '%')
-        {
-            format++;
-
-            switch (*format)
-            {
-                case 'c':
-                    _print_char(va_arg(args, int), &printed_chars);
-                    break;
-
-                case 's':
-                    _print_string(va_arg(args, char *), &printed_chars);
-                    break;
-
-                case '%':
-                    _print_char('%', &printed_chars);
-                    break;
-
-                default:
-                    write(1, format, 1);
-                    printed_chars++;
-            }
-        }
-        else
-        {
-            write(1, format, 1);
-            printed_chars++;
-        }
-
-        format++;
-    }
-
-    va_end(args);
-    return (printed_chars);
+	va_start(arguments, format), buffer = malloc(sizeof(char) * 1024);
+	if (!format || !buffer || (format[i] == '%' && !format[i + 1]))
+		return (-1);
+	if (!format[i])
+		return (0);
+	for (i = 0; format && format[i]; i++)
+	{
+		if (format[i] == '%')
+		{
+			if (format[i + 1] == '\0')
+			{	print_buf(buffer, ibuf), free(buffer), va_end(arguments);
+				return (-1);
+			}
+			else
+			{	function = get_print_func(format, i + 1);
+				if (function == NULL)
+				{
+					if (format[i + 1] == ' ' && !format[i + 2])
+						return (-1);
+					handl_buf(buffer, format[i], ibuf), len++, i--;
+				}
+				else
+				{
+					len += function(arguments, buffer, ibuf);
+					i += ev_print_func(format, i + 1);
+				}
+			} i++;
+		}
+		else
+			handl_buf(buffer, format[i], ibuf), len++;
+		for (ibuf = len; ibuf > 1024; ibuf -= 1024)
+			;
+	}
+	print_buf(buffer, ibuf), free(buffer), va_end(arguments);
+	return (len);
 }
